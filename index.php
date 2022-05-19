@@ -74,7 +74,7 @@ function getShortenText( $cID, $posts ) {
         echo "<H1> " . $clanekTitle . " </H1>";
         echo '<img src=' . $imageURL . ' alt="'. $imageAlt . '">';
 
-        echo "<br>$skrajsanText A...<br>";
+        echo "<br>$skrajsanText ...<br>";
 
         echo "<H3> " . $clanekAvtor . " </H3>";
 
