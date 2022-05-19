@@ -75,8 +75,9 @@ if ( $clanekObstaja ) {
 </nav>
 <!-- Page content-->
 <div class="container">
+    <div class="row">
     <?php
-
+        echo '<div class="col-sm-12">';
         echo "<H1> " . $clanekTitle . " </H1>";
         echo '<img src=' . $imageURL . ' alt="'. $imageAlt . '">';
 
@@ -84,9 +85,9 @@ if ( $clanekObstaja ) {
         echo "<H3> " . $clanekAvtor . " </H3>";
 
         echo "<H5> " . $dateTime. " </H5>";
-
+        echo '</div>';
     ?>
-
+    </div>
 </div>
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

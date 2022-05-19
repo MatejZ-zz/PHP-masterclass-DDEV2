@@ -44,9 +44,11 @@ function getShortenText( $cID, $posts ) {
 </nav>
 <!-- Page content-->
 <div class="container">
+    <div class="row">
     <?php
 
     foreach ($posts as $key => $value) {
+        echo '<div class="col-sm-4">';
         //echo "$key<br>";
         /*
         echo json_encode($value)."<br>";
@@ -72,7 +74,7 @@ function getShortenText( $cID, $posts ) {
         $dateTime = date('d-m-Y', $value["authored on"]);
 
         echo "<H1> " . $clanekTitle . " </H1>";
-        echo '<img src=' . $imageURL . ' alt="'. $imageAlt . '">';
+        echo '<img height="200px" width="auto" src=' . $imageURL . ' alt="'. $imageAlt . '">';
 
         echo "<br>$skrajsanText ...<br>";
 
@@ -90,10 +92,11 @@ function getShortenText( $cID, $posts ) {
             echo "<br>";
         }
         */
+        echo '</div>';
     }
 
     ?>
-
+    </div>
 </div>
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
