@@ -1,17 +1,8 @@
 <?php
-require_once("helpers/posts.php");
 
+//require_once("helpers/posts.php");
 
-function getShortenText( $cID, $posts ) {
-    if (is_numeric($cID)) {
-        if ( array_key_exists($cID, $posts) ) {
-            global $clanekID;
-            $clanekID = $cID;
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
+require_once("INC/functions.php");
 
 ?>
 <!DOCTYPE html>
@@ -47,52 +38,61 @@ function getShortenText( $cID, $posts ) {
     <div class="row">
     <?php
 
-    foreach ($posts as $key => $value) {
-        echo '<div class="col-sm-4">';
-        //echo "$key<br>";
-        /*
-        echo json_encode($value)."<br>";
-        echo "<br>";
-        echo "AAAAAAAAAA<br>";
-        */
+    $posts = allPosts();
 
-        $image = $value["image"];
-        $imageURL = $image["url"];
-        $imageAlt = $image["alt"];
-
-        $clanekTitle = $value["title"];
-        $clanekVsebina = $value["content"];
-
-        $char = " "; // išči prvi presledek ampak lahko damo tu recimo piko "."
-        $pos = 0;
-        $pos = strpos(substr($clanekVsebina, 150, strlen($clanekVsebina) ) , $char);
-        $pos2 = 151 + $pos; // dodamo še en char ... v grobem to pomeni, če bi iskali piko, bi piko tudi zapisali
-
-        $skrajsanText = substr($clanekVsebina, 0, $pos2);
-
-        $clanekAvtor = $value["authored by"];
-        $dateTime = date('d-m-Y', $value["authored on"]);
-
-        echo "<H1> " . $clanekTitle . " </H1>";
-        echo '<img height="200px" width="auto" src=' . $imageURL . ' alt="'. $imageAlt . '">';
-
-        echo "<br>$skrajsanText ...<br>";
-
-        echo "<H3> " . $clanekAvtor . " </H3>";
-
-        echo "<H5> " . $dateTime. " </H5>";
-
-        echo '<a href="article.php?id=' . $key . '">Read more</a>';
-
-        /*
-        foreach ($value as $key => $value2) {
-            echo "BBBBBBBB<br>";
-            echo "$key<br>";
-            echo json_encode($value2)."<br>";
+    if (count($posts) < 1) {
+        //echo "error 123456";
+        ?>
+        <h3>We are currently working on this page ... </h3>
+        <img  src="images/maintenance.png" alt="maintenance">
+        <?php
+    } else {
+        foreach ($posts as $key => $value) {
+            echo '<div class="col-sm-4">';
+            //echo "$key<br>";
+            /*
+            echo json_encode($value)."<br>";
             echo "<br>";
+            */
+
+            $image = $value["image"];
+            $imageURL = $image["url"];
+            $imageAlt = $image["alt"];
+
+            $clanekTitle = $value["title"];
+            $clanekVsebina = $value["content"];
+
+            $char = " "; // išči prvi presledek ampak lahko damo tu recimo piko "."
+            $pos = 0;
+            $pos = strpos(substr($clanekVsebina, 150, strlen($clanekVsebina) ) , $char);
+            $pos2 = 151 + $pos; // dodamo še en char ... v grobem to pomeni, če bi iskali piko, bi piko tudi zapisali
+
+            $skrajsanText = substr($clanekVsebina, 0, $pos2);
+
+            $clanekAvtor = $value["authored by"];
+            $dateTime = date('d-m-Y', $value["authored on"]);
+
+            echo "<H1> " . $clanekTitle . " </H1>";
+            echo '<img height="200px" width="auto" src=' . $imageURL . ' alt="'. $imageAlt . '">';
+
+            echo "<br>$skrajsanText ...<br>";
+
+            echo "<H3> " . $clanekAvtor . " </H3>";
+
+            echo "<H5> " . $dateTime. " </H5>";
+
+            echo '<a href="article.php?id=' . $key . '">Read more</a>';
+
+            /*
+            foreach ($value as $key => $value2) {
+                echo "BBBBBBBB<br>";
+                echo "$key<br>";
+                echo json_encode($value2)."<br>";
+                echo "<br>";
+            }
+            */
+            echo '</div>';
         }
-        */
-        echo '</div>';
     }
 
     ?>

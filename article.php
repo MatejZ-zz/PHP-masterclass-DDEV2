@@ -1,32 +1,21 @@
 <?php
 
-require_once("helpers/posts.php");
+//require_once("helpers/posts.php");
+require_once("INC/functions.php");
 
 $clanekID = -1;
-$clanekObstaja = FALSE;
-
-function checkClanekObstaja( $cID, $posts ) {
-    if (is_numeric($cID)) {
-        if ( array_key_exists($cID, $posts) ) {
-            global $clanekID;
-            $clanekID = $cID;
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
+$clanek = FALSE;
 
 if (  isset( $_GET["id"]  )  ) {
-    $clanekObstaja = checkClanekObstaja( $_GET["id"], $posts );
+    $clanek = getArticle( $_GET["id"] );
 }
 
 //echo "Pokaži clanekID: $clanekID";
 
-if ( $clanekObstaja ) {
+if ( $clanek ) {
     //echo "Članek obstaja";
 
-    $value = $posts[$clanekID];
+    $value = $clanek;
     $image = $value["image"];
     $imageURL = $image["url"];
     $imageAlt = $image["alt"];
