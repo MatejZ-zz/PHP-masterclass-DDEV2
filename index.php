@@ -4,6 +4,16 @@
 
 require_once("INC/functions.php");
 
+session_start();
+$username = "";
+$loginOK = 0;
+if (  isset($_SESSION['loginUserName']) && !empty($_SESSION['loginUserName'])  ) {
+    $loginOK = 1;
+    $username = $_SESSION['loginUserName'];
+} else {
+
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,13 +32,28 @@ require_once("INC/functions.php");
 <!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="index.php">Agiledrop PHP-Masterclass</a>
+    <a class="navbar-brand" href="index.php">Agiledrop PHP-Masterclass <?php echo  $username; ?></a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
         class="navbar-toggler-icon"></span></button>
+
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
+          <?php
+          if ($loginOK){
+              ?>
+              <li class="nav-item"><a class="nav-link active" aria-current="page" href="logout.php">LogOut</a></li>
+              <?php
+          } else {
+              ?>
+              <li class="nav-item"><a class="nav-link active" aria-current="page" href="login.php">LogIn</a></li>
+              <?php
+          }
+          ?>
+
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
       </ul>
     </div>
   </div>
@@ -40,6 +65,9 @@ require_once("INC/functions.php");
 
     $posts = allPosts();
 
+    $postsObj = allPostsObj();
+    //var_dump($postsObj);
+
     if (count($posts) < 1) {
         //echo "error 123456";
         ?>
@@ -47,14 +75,41 @@ require_once("INC/functions.php");
         <img  src="images/maintenance.png" alt="maintenance">
         <?php
     } else {
-        foreach ($posts as $key => $value) {
+        foreach ($postsObj as $keyObj => $valueObj) {
+            //var_dump($valueObj);
             echo '<div class="col-sm-4">';
+            $image = $valueObj->getImage();
+            $imageURL = $image["url"];
+            $imageAlt = $image["alt"];
+            $clanekTitle = $valueObj->getTitle();
+            $clanekVsebina = $valueObj->getContent();
+            $char = " "; // išči prvi presledek ampak lahko damo tu recimo piko "."
+            $pos = 0;
+            $pos = strpos(substr($clanekVsebina, 150, strlen($clanekVsebina) ) , $char);
+            $pos2 = 151 + $pos; // dodamo še en char ... v grobem to pomeni, če bi iskali piko, bi piko tudi zapisali
+            $skrajsanText = substr($clanekVsebina, 0, $pos2);
+            $clanekAvtor = $valueObj->getAuthoredBy();
+            $authoredOn = $valueObj->getAuthoredOn();
+            $dateTime = date('d-m-Y', $authoredOn );
+            //$postObject = new Post($clanekTitle, $clanekVsebina, $authoredOn, $clanekAvtor, $imageURL, $imageAlt );
+            //var_dump($postObject);
+            echo "<H1>$clanekTitle</H1>";
+            echo '<img height="200px" width="auto" src=' . $imageURL . ' alt="'. $imageAlt . '">';
+            echo "<br>$skrajsanText ...<br>";
+            echo "<H3>$clanekAvtor</H3>";
+            echo "<H5>$dateTime</H5>";
+            echo '<a href="article.php?id=' . $valueObj->getId() . '">Read more</a>';
+            echo '</div>';
+        }
+
+        foreach ($posts as $key => $value) {
+            //echo '<div class="col-sm-4">';
             //echo "$key<br>";
             /*
             echo json_encode($value)."<br>";
             echo "<br>";
             */
-
+            /*
             $image = $value["image"];
             $imageURL = $image["url"];
             $imageAlt = $image["alt"];
@@ -70,8 +125,14 @@ require_once("INC/functions.php");
             $skrajsanText = substr($clanekVsebina, 0, $pos2);
 
             $clanekAvtor = $value["authored by"];
-            $dateTime = date('d-m-Y', $value["authored on"]);
+            $authoredOn = $value["authored on"];
+            $dateTime = date('d-m-Y', $authoredOn );
+            */
 
+            //$postObject = new Post($clanekTitle, $clanekVsebina, $authoredOn, $clanekAvtor, $imageURL, $imageAlt );
+            //var_dump($postObject);
+
+            /*
             echo "<H1> " . $clanekTitle . " </H1>";
             echo '<img height="200px" width="auto" src=' . $imageURL . ' alt="'. $imageAlt . '">';
 
@@ -82,6 +143,7 @@ require_once("INC/functions.php");
             echo "<H5> " . $dateTime. " </H5>";
 
             echo '<a href="article.php?id=' . $key . '">Read more</a>';
+            */
 
             /*
             foreach ($value as $key => $value2) {
@@ -91,7 +153,7 @@ require_once("INC/functions.php");
                 echo "<br>";
             }
             */
-            echo '</div>';
+            //echo '</div>';
         }
     }
 
