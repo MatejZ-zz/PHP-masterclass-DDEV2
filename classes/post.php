@@ -7,15 +7,18 @@ class Post {
     public int $authoredOn = 0;
     public string $authoredBy = "";
     public array $image;
+    public int $lastUpdate = 0;
+
 
     // Constructor
-    function __construct($id, $title, $content, $authoredOn, $authoredBy, $url = "images/noImageAvailable.png", $alt = "No Image Available.") {
+    function __construct($id, $title, $content, $authoredOn, $authoredBy, $url = "images/noImageAvailable.png", $alt = "No Image Available.", $lastUpdate = 0) {
         $this->id = $id;
         $this->title = $title;
         $this->content = $content;
         $this->authoredOn = $authoredOn;
         $this->authoredBy = $authoredBy;
         $this->image[] = $this->setImage($url, $alt);
+        $this->lastUpdate = $lastUpdate;
     }
 
     // Methods
@@ -65,6 +68,17 @@ class Post {
     {
         return $this->image;
     }
+
+    function setLastUpdate($lastUpdate): void
+    {
+        $this->lastUpdate = $lastUpdate;
+    }
+    function getLastUpdate(): int
+    {
+        return $this->lastUpdate;
+    }
+
+
 
 
     /*

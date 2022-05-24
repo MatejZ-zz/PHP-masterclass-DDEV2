@@ -1,8 +1,7 @@
 <?php
 
-require_once("helpers/posts.php");
-require_once("classes/post.php");
-
+include("helpers/posts.php");
+include("classes/post.php");
 /**
  * Connect to database
  * ddev-DDEV2-db:3306 for https://ddev2.ddev.site/index.php
@@ -138,6 +137,7 @@ function transformToKnownStructure($post): array
     $transformatedPost["image"]["url"] = ( isset( $post["url"] ) ) ? $post["url"] : "images/noImageAvailable.png";
     $transformatedPost["image"]["alt"] = ( isset( $post["alt"] ) ) ? $post["alt"] : "No Image Available.";
     $transformatedPost["authored on"] = ( isset( $post["created"] ) ) ? $post["created"] : "";
+    $transformatedPost["lastUpdate"] = ( isset( $post["updated"] ) ) ? $post["updated"] : "";
     $uName = ( isset( $post["name"] ) ) ? $post["name"] : "";
     $sName = ( isset( $post["surname"] ) ) ? $post["surname"] : "";
     $transformatedPost["authored by"] = "$uName $sName";
@@ -165,6 +165,7 @@ function allPostsObj(): array
                 posts.content,
                 posts.author,
                 posts.created,
+                posts.updated,
                 image.url,
                 image.alt,
                 users.name,
@@ -173,24 +174,22 @@ function allPostsObj(): array
             LEFT JOIN image 
                 ON posts.image = image.ID
             LEFT JOIN users 
-                ON users.ID = posts.author";
+                ON users.ID = posts.author WHERE posts.removed <=> :removed";
         //$s = $database->query($query);
         //$postsFromDb = $s->fetchAll(PDO::FETCH_ASSOC);
 
         // Prepare a SQL statement
         $postsFromDb = $database->prepare($query);
         // Execute the statement
-        $postsFromDb->execute([]);
-
-
+        $postsFromDb->execute([ 'removed' => null ]);
 
 
 
         //var_dump($postsFromDb);
         $postNr = 1;
         foreach ($postsFromDb as $post) {
-            $postString = json_encode($post);
-            echo "$postString<br><br><br>";
+            //$postString = json_encode($post);
+            //echo "$postString<br><br><br>";
             $postId = ( isset( $post["ID"] ) ) ? $post["ID"] : "";
             //echo $postId;
             $uName = ( isset( $post["name"] ) ) ? $post["name"] : "";
@@ -198,7 +197,7 @@ function allPostsObj(): array
             $authoredBy = "$uName $sName";
             $imageURL = ( isset( $post["url"] ) ) ? $post["url"] : "images/noImageAvailable.png";
             $imageAlt = ( isset( $post["alt"] ) ) ? $post["alt"] : "No Image Available.";
-            $posts[$postNr] = new Post($postId, $post["title"], $post["content"], $post["created"], $authoredBy, $imageURL, $imageAlt );
+            $posts[$postNr] = new Post($postId, $post["title"], $post["content"], $post["created"], $authoredBy, $imageURL, $imageAlt, $post["updated"] );
             $postNr ++;
         }
     }

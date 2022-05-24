@@ -2,7 +2,7 @@
 
 //require_once("helpers/posts.php");
 
-require_once("INC/functions.php");
+include("INC/functions.php");
 
 session_start();
 $username = "";

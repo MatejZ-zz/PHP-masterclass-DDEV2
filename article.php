@@ -1,13 +1,25 @@
 <?php
 
 //require_once("helpers/posts.php");
-require_once("INC/functions.php");
+include("INC/functions.php");
+
+session_start();
 
 $clanekID = -1;
 $clanek = FALSE;
 
 if (  isset( $_GET["id"]  )  ) {
+    $clanekID = $_GET["id"];
     $clanek = getArticle( $_GET["id"] );
+}
+
+$username = "";
+$loginOK = 0;
+if (  isset($_SESSION['loginUserName']) && !empty($_SESSION['loginUserName'])  ) {
+    $loginOK = 1;
+    $username = $_SESSION['loginUserName'];
+} else {
+
 }
 
 //echo "Pokaži clanekID: $clanekID";
@@ -23,6 +35,7 @@ if ( $clanek ) {
     $clanekVsebina = $value["content"];
     $clanekAvtor = $value["authored by"];
     $dateTime = date('d-m-Y', $value["authored on"]);
+    $dateTimeLastUpdate = date('d-m-Y', $value["lastUpdate"]);
 
 
 } else {
@@ -41,7 +54,7 @@ if ( $clanek ) {
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
   <meta name="description" content=""/>
   <meta name="author" content=""/>
-  <title><?php echo"asdf"; ?></title>
+  <title><?php echo $clanekAvtor; ?></title>
   <!-- Favicon-->
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
   <!-- Core theme CSS (includes Bootstrap)-->
@@ -51,7 +64,7 @@ if ( $clanek ) {
 <!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="index.php">Agiledrop PHP-Masterclass</a>
+    <a class="navbar-brand" href="index.php">Agiledrop PHP-Masterclass <?php echo  $username; ?> </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
         class="navbar-toggler-icon"></span></button>
@@ -71,9 +84,15 @@ if ( $clanek ) {
         echo '<img src=' . $imageURL . ' alt="'. $imageAlt . '">';
 
         echo "<br>$clanekVsebina<br>";
-        echo "<H3> " . $clanekAvtor . " </H3>";
+        echo "<H3>$clanekAvtor</H3>";
 
-        echo "<H5> " . $dateTime. " </H5>";
+        echo "<H5>$dateTime</H5>";
+        echo "<H5>$dateTimeLastUpdate</H5>";
+
+        if ( $loginOK ) {
+            echo '<a href="editPost.php?postID=' . $clanekID . '">Edit Post</a>';
+        }
+
         echo '</div>';
     ?>
     </div>

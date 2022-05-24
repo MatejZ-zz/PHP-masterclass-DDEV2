@@ -1,5 +1,5 @@
 <?php
-require_once("INC/functions.php");
+include("INC/functions.php");
 $database = databaseConnection();
 if ( $database ) {
 
@@ -13,6 +13,7 @@ session_start();
 // Define variables and initialize with empty values
 $username = $password = "";
 $username_err = $password_err = "";
+
 if (  isset($_SESSION['loginUserName']) && !empty($_SESSION['loginUserName'])  ) {
     header("Location: index.php"); die();
 } else {
