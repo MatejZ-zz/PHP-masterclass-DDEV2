@@ -77,29 +77,35 @@ if (  isset($_SESSION['loginUserName']) && !empty($_SESSION['loginUserName'])  )
     } else {
         foreach ($postsObj as $keyObj => $valueObj) {
             //var_dump($valueObj);
+            //$valueObj->izpisiCeloto();
+
             echo '<div class="col-sm-4">';
             $image = $valueObj->getImage();
             $imageURL = $image["url"];
             $imageAlt = $image["alt"];
             $clanekTitle = $valueObj->getTitle();
-            $clanekVsebina = $valueObj->getContent();
-            $char = " "; // išči prvi presledek ampak lahko damo tu recimo piko "."
-            $pos = 0;
-            $pos = strpos(substr($clanekVsebina, 150, strlen($clanekVsebina) ) , $char);
-            $pos2 = 151 + $pos; // dodamo še en char ... v grobem to pomeni, če bi iskali piko, bi piko tudi zapisali
-            $skrajsanText = substr($clanekVsebina, 0, $pos2);
+            //$clanekVsebina = $valueObj->getContent();
+            //$char = " "; // išči prvi presledek ampak lahko damo tu recimo piko "."
+            //$pos = 0;
+            //$pos = strpos(substr($clanekVsebina, 150, strlen($clanekVsebina) ) , $char);
+            //$pos2 = 151 + $pos; // dodamo še en char ... v grobem to pomeni, če bi iskali piko, bi piko tudi zapisali
+            //$skrajsanText = substr($clanekVsebina, 0, $pos2);
+            //$skrajsanText = $valueObj->izpisiCOsnutek();
             $clanekAvtor = $valueObj->getAuthoredBy();
             $authoredOn = $valueObj->getAuthoredOn();
             $dateTime = date('d-m-Y', $authoredOn );
             //$postObject = new Post($clanekTitle, $clanekVsebina, $authoredOn, $clanekAvtor, $imageURL, $imageAlt );
             //var_dump($postObject);
-            echo "<H1>$clanekTitle</H1>";
+            //echo "<H1>$clanekTitle</H1>";
+            $valueObj->izpisiNaslov();
             echo '<img height="200px" width="auto" src=' . $imageURL . ' alt="'. $imageAlt . '">';
-            echo "<br>$skrajsanText ...<br>";
+            //echo "<br>$skrajsanText ...<br>";
+            $valueObj->izpisiCOsnutek();
             echo "<H3>$clanekAvtor</H3>";
             echo "<H5>$dateTime</H5>";
             echo '<a href="article.php?id=' . $valueObj->getId() . '">Read more</a>';
             echo '</div>';
+
         }
 
         foreach ($posts as $key => $value) {

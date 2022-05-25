@@ -58,7 +58,6 @@ class Post {
     {
         return $this->authoredBy;
     }
-
     function setImage($url, $alt): void
     {
         $this->image["url"] = $url;
@@ -68,7 +67,6 @@ class Post {
     {
         return $this->image;
     }
-
     function setLastUpdate($lastUpdate): void
     {
         $this->lastUpdate = $lastUpdate;
@@ -76,6 +74,32 @@ class Post {
     function getLastUpdate(): int
     {
         return $this->lastUpdate;
+    }
+    public function izpisiCeloto()
+    {
+        echo "<p>".$this->content."</p>";
+    }
+    public function izpisiCOsnutek(){
+        $char = " "; // išči prvi presledek ampak lahko damo tu recimo piko "."
+        $pozicijaPrvegaPresledka = strpos(substr($this->content, 150, strlen($this->content) ) , $char);
+        $osnutekLen = 151 + $pozicijaPrvegaPresledka; // dodamo še en char ... v grobem to pomeni, če bi iskali piko, bi piko tudi zapisali
+        $skrajsanText = substr($this->content, 0, $osnutekLen);
+        echo "<br>$skrajsanText...<br>";
+    }
+    public function izpisiNaslov()
+    {
+        echo "<H1>".$this->title."</H1>";
+    }
+
+    public function izpisiAvtor()
+    {
+        echo "<H1>".$this->authoredBy."</H1>";
+    }
+
+    public function izpisiObjavaDatum()
+    {
+        $dateTime = date('d-m-Y', $this->authoredOn );
+        echo "<H5>".$dateTime."</H5>";
     }
 
 

@@ -11,6 +11,9 @@ $clanek = FALSE;
 if (  isset( $_GET["id"]  )  ) {
     $clanekID = $_GET["id"];
     $clanek = getArticle( $_GET["id"] );
+
+    $clanekObj = getArticleObj( $_GET["id"] );
+
 }
 
 $username = "";
@@ -24,9 +27,10 @@ if (  isset($_SESSION['loginUserName']) && !empty($_SESSION['loginUserName'])  )
 
 //echo "Pokaži clanekID: $clanekID";
 
-if ( $clanek ) {
+//if ( $clanek ) {
+if ( $clanekObj ) {
     //echo "Članek obstaja";
-
+    /*
     $value = $clanek;
     $image = $value["image"];
     $imageURL = $image["url"];
@@ -36,6 +40,16 @@ if ( $clanek ) {
     $clanekAvtor = $value["authored by"];
     $dateTime = date('d-m-Y', $value["authored on"]);
     $dateTimeLastUpdate = date('d-m-Y', $value["lastUpdate"]);
+    */
+
+    $image = $clanekObj->getImage();
+    $imageURL = $image["url"];
+    $imageAlt = $image["alt"];
+    $clanekTitle = $clanekObj->getTitle();
+    $clanekVsebina = $clanekObj->getContent();
+    $clanekAvtor = $clanekObj->getAuthoredBy();
+    $dateTime = date('d-m-Y', $clanekObj->getAuthoredOn());
+    $dateTimeLastUpdate = date('d-m-Y', $clanekObj->getLastUpdate());
 
 
 } else {
@@ -80,13 +94,20 @@ if ( $clanek ) {
     <div class="row">
     <?php
         echo '<div class="col-sm-12">';
-        echo "<H1> " . $clanekTitle . " </H1>";
+        //echo "<H1> " . $clanekTitle . " </H1>";
+
+        $clanekObj->izpisiNaslov();
         echo '<img src=' . $imageURL . ' alt="'. $imageAlt . '">';
 
-        echo "<br>$clanekVsebina<br>";
-        echo "<H3>$clanekAvtor</H3>";
+        //echo "<br>$clanekVsebina<br>";
+        $clanekObj->izpisiCeloto();
 
-        echo "<H5>$dateTime</H5>";
+        //echo "<H3>$clanekAvtor</H3>";
+        $clanekObj->izpisiAvtor();
+
+        //echo "<H5>$dateTime</H5>";
+        $clanekObj->izpisiObjavaDatum();
+
         echo "<H5>$dateTimeLastUpdate</H5>";
 
         if ( $loginOK ) {

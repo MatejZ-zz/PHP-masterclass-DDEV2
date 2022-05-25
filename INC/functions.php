@@ -157,8 +157,6 @@ function allPostsObj(): array
     $posts = array();
     if ($database){
 
-
-
         $query = "SELECT 
                 posts.ID,
                 posts.title,
@@ -198,8 +196,62 @@ function allPostsObj(): array
             $imageURL = ( isset( $post["url"] ) ) ? $post["url"] : "images/noImageAvailable.png";
             $imageAlt = ( isset( $post["alt"] ) ) ? $post["alt"] : "No Image Available.";
             $posts[$postNr] = new Post($postId, $post["title"], $post["content"], $post["created"], $authoredBy, $imageURL, $imageAlt, $post["updated"] );
+            //$asfdaf = new Post("")
             $postNr ++;
         }
     }
     return $posts;
 }
+
+function getArticleObj( $cID )
+{
+    $database = databaseConnection();
+    $post = array();
+    if (is_numeric($cID) && $database) {
+        //var_dump($database);
+
+        $query = "SELECT 
+                posts.ID,
+                posts.title,
+                posts.content,
+                posts.author,
+                posts.created,
+                posts.updated,
+                image.url,
+                image.alt,
+                users.name,
+                users.surname
+            FROM posts 
+            LEFT JOIN image 
+                ON posts.image = image.ID
+            LEFT JOIN users 
+                ON users.ID = posts.author WHERE posts.removed <=> :removed AND posts.ID = :id ";
+        //$s = $database->query($query);
+        //$postsFromDb = $s->fetchAll(PDO::FETCH_ASSOC);
+
+        // Prepare a SQL statement
+        $postsFromDb = $database->prepare($query);
+        // Execute the statement
+        $postsFromDb->execute([ 'removed' => null , 'id' => $cID]);
+
+
+        if ($row = $postsFromDb->fetch()) {
+
+
+            $postId = ( isset( $row["ID"] ) ) ? $row["ID"] : "";
+            //echo $postId;
+            $uName = ( isset( $row["name"] ) ) ? $row["name"] : "";
+            $sName = ( isset( $row["surname"] ) ) ? $row["surname"] : "";
+            $authoredBy = "$uName $sName";
+            $imageURL = ( isset( $row["url"] ) ) ? $row["url"] : "images/noImageAvailable.png";
+            $imageAlt = ( isset( $row["alt"] ) ) ? $row["alt"] : "No Image Available.";
+
+
+            return $post = new Post($postId, $row["title"], $row["content"], $row["created"], $authoredBy, $imageURL, $imageAlt, $row["updated"] );
+        }
+    }
+    return FALSE;
+}
+
+
+
